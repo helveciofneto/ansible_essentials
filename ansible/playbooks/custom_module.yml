@@ -1,0 +1,52 @@
+# @author: Helvecio Neto <helveciofneto@gmail.com>
+# @description: This playbook runs and prints the output structure of a custom module.
+---
+- name: Custom Module
+  hosts: '{{ affected_host }}'
+  gather_facts: no
+  ignore_unreachable: yes
+
+  tasks:
+    # ---------------------------
+    # Simulate module success.
+    # ---------------------------
+    - name: Run Custom Module - Success
+      check_group_membership:
+        user: vagrant
+        group: vagrant
+        behavior: fail
+      register: custom_module_success
+      delegate_to: 127.0.0.1
+
+    - name: Custom Module Output - Success
+      debug:
+        msg: '{{ custom_module_success }}'
+    # ---------------------------
+    # Simulate failure message with "inform" flag.
+    # ---------------------------
+    - name: Run Custom Module - Inform Only
+      check_group_membership:
+        user: root
+        group: vagrant
+        behavior: inform
+      register: custom_module_inform
+      delegate_to: 127.0.0.1
+
+    - name: Custom Module Output - Inform Only
+      debug:
+        msg: '{{ custom_module_inform }}'
+    # ---------------------------
+    # Simulate module failure.
+    # ---------------------------
+    - name: Run Custom Module - Failure
+      check_group_membership:
+        user: invaliduser
+        group: invalidgroup
+        behavior: fail
+      register: custom_module_failure
+      delegate_to: 127.0.0.1
+
+    - name: Custom Module Output - Failure
+      debug:
+        msg: '{{ custom_module_failure }}'
+    #---------------------------

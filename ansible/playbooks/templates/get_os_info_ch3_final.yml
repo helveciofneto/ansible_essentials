@@ -1,0 +1,65 @@
+# @author: Helvecio Neto <helveciofneto@gmail.com>
+# @description: This playbook sends the host's OS info via email.
+---
+# Play Declaration
+- name: Send OS Info Email
+  hosts: '{{ affected_host }}'
+  gather_facts: no
+  ignore_unreachable: yes
+
+  tasks:
+    - block:
+        - name: Get OS Info - Linux
+          command: 'uname -a'
+          changed_when: false
+          register: os_info_linux
+          when: vars.os != "windows"
+
+        - name: Get OS Info - Windows
+          win_shell: >
+            (Get-CimInstance Win32_OperatingSystem |
+            Select-Object "Caption", "CSName", "Version", "OSArchitecture" |
+            ConvertTo-Csv -NoTypeInformation -Delimiter ";" |
+            Select-Object -Last 1).Replace('"','')
+          changed_when: false
+          register: os_info_windows
+          when: vars.os == "windows"
+
+        - name: Fail If Host Is Unreachable
+          fail:
+            msg: '{{ os_info_linux.msg if vars.os != "windows" else os_info_windows.msg | trim }}'
+          when: ( os_info_linux is defined
+                  and os_info_linux.unreachable is defined
+                  and os_info_linux.unreachable
+                )
+                or
+                ( os_info_windows is defined
+                  and os_info_windows.unreachable is defined
+                  and os_info_windows.unreachable
+                )
+
+        - name: Set Email Variables - Success
+          set_fact:
+            email_tag: "[SUCCESS]"
+            email_body: '{{ os_info_linux.stdout if vars.os != "windows" else os_info_windows.stdout | trim }}'
+          delegate_to: 127.0.0.1
+      rescue:
+        - name: Set Email Variables - Failure
+          set_fact:
+            email_tag: "[FAILURE]"
+            email_body: '{{ ansible_failed_result.msg }}'
+          delegate_to: 127.0.0.1
+      always:
+        - name: Send Email
+          mail:
+            host: smtp.gmail.com
+            port: 587
+            username: <your GMail address>
+            password: <a valid GMail App Password>  # For creating App Passwords, refer to https://support.google.com/accounts/answer/185833?hl=en
+            secure: try
+            charset: utf8
+            from: <your GMail address>
+            to: '{{ email_to | default("recipient@domain.com") }}'  # Change to your email address
+            subject: 'OS Info {{ email_tag }} - {{ inventory_hostname }}'
+            body: '{{ email_body }}'
+          delegate_to: 127.0.0.1

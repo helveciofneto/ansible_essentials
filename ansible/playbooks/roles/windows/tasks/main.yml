@@ -1,0 +1,22 @@
+# @author: Helvecio Neto <helveciofneto@gmail.com>
+# @description: This file calls tasks for the role "windows".
+---
+- name: Get Powershell Version
+  win_shell: $PSVersionTable
+  changed_when: false
+  register: powershell_version
+
+- name: Get Memory Usage
+  script: ../scripts/windows/get_memory_pct.ps1
+  register: memory_pct
+
+- name: Save Results To Email Body
+  set_fact:
+      email:
+        from: '{{ windows.email.from }}'
+        to: '{{ windows.email.to }}'
+        subject: '{{ windows.email.subject }}'
+        body: |
+          {{ windows.email.subject }}:
+          {{ powershell_version.stdout }}
+          {{ memory_pct.stdout }}

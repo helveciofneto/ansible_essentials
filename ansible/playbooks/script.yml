@@ -1,0 +1,21 @@
+# @author: Helvecio Neto <helveciofneto@gmail.com>
+# @description: This playbook runs and prints the output structure of a module.
+---
+- name: Script Module
+  hosts: '{{ affected_host }}'
+  gather_facts: no
+  ignore_unreachable: yes
+
+  tasks:
+    - name: Run Script Module
+      script: >
+        {% if vars.os == "windows"%}
+        ../scripts/windows/get_memory_pct.ps1
+        {% else %}
+        ../scripts/linux/get_memory_pct.sh
+        {% endif %}
+      register: script
+
+    - name: Script Module Output
+      debug:
+        msg: '{{ script }}'

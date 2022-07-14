@@ -1,0 +1,8 @@
+# @author: Helvecio Neto <helveciofneto@gmail.com>
+# @description: This file sets default values for the role "linux".
+---
+linux:
+  email:
+    from: '<your GMail address>'
+    to: 'recipient@domain.com'  # Change to your email address
+    subject: 'Linux Results - {{ inventory_hostname }}'

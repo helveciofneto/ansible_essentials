@@ -1,0 +1,25 @@
+# @author: Helvecio Neto <helveciofneto@gmail.com>
+# @description: This playbook runs and prints the output structure of a module.
+---
+- name: File Module
+  hosts: '{{ affected_host }}'
+  gather_facts: no
+  ignore_unreachable: yes
+
+  tasks:
+    - name: Create Test Directory
+      file:
+        path: /tmp/testdir
+        state: directory
+      register: directory
+
+    - name: Create Test File
+      file:
+        path: /tmp/testdir/testfile
+        state: touch  # Creates file if doesn't exist.
+        mode: 0600  # Set permission to owner-only.
+      register: file
+
+    - name: Print Test File
+      debug:
+        msg: '{{ file }}'

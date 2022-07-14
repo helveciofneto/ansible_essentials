@@ -1,0 +1,16 @@
+# @author: Helvecio Neto <helveciofneto@gmail.com>
+# @description: This playbook runs and prints the output structure of a module.
+---
+- name: Ping Module
+  hosts: '{{ affected_host }}'
+  gather_facts: no
+  ignore_unreachable: yes
+
+  tasks:
+    - name: Run Ping Module
+      ping:
+      register: ping
+
+    - name: Ping Module Output
+      debug:
+        msg: '{{ ping }}'

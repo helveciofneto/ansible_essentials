@@ -1,0 +1,8 @@
+# @author: Helvecio Neto <helveciofneto@gmail.com>
+# @description: This file sets default values for the role "windows".
+---
+windows:
+  email:
+    from: '<your GMail address>'
+    to: 'recipient@domain.com'  # Change to your email address
+    subject: 'Windows Results - {{ inventory_hostname }}'

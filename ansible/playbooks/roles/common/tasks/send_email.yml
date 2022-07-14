@@ -1,0 +1,16 @@
+# @author: Helvecio Neto <helveciofneto@gmail.com>
+# @description: This task sends an email with the specified parameters.
+---
+- name: Send Email
+  mail:
+    host: '{{ common.email.host }}'
+    port: '{{ common.email.port }}'
+    username: '{{ common.email.username }}'
+    password: '{{ common.email.password }}'
+    secure: '{{ common.email.secure }}'
+    charset: '{{ common.email.charset }}'
+    from: '{{ email.from }}'
+    to: '{{ email.to }}'
+    subject: '{{ email.subject }}'
+    body: '{{ email.body }}'
+  delegate_to: 127.0.0.1

@@ -1,0 +1,17 @@
+# @author: Helvecio Neto <helveciofneto@gmail.com>
+# @description: This playbook runs and prints the output structure of a module.
+---
+- name: URI Module
+  hosts: '{{ affected_host }}'
+  gather_facts: no
+  ignore_unreachable: yes
+  tasks:
+    - name: Run URI Module
+      uri:
+        url: http://github.com
+      register: uri
+      delegate_to: 127.0.0.1
+
+    - name: URI Module Output
+      debug:
+        msg: '{{ uri }}'

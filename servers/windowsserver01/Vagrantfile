@@ -1,0 +1,14 @@
+
+# @author: Helvecio Neto <helveciofneto@gmail.com>
+Vagrant.configure("2") do |config|
+  config.vm.box = "jacqinthebox/windowsserver2016"
+  config.vm.hostname = "windowsserver01"
+  config.vm.network "private_network", ip: "192.168.56.31"
+  config.vm.provider "virtualbox" do |vb|
+    vb.memory = "2048"
+    vb.gui = false
+  end
+  #Ref: https://github.com/ansible/ansible/blob/stable-2.7/examples/scripts/ConfigureRemotingForAnsible.ps1
+  config.vm.provision "shell", path: "../../ansible/windows/ConfigureRemotingForAnsible.ps1"
+
+end

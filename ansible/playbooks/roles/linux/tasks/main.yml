@@ -1,0 +1,22 @@
+# @author: Helvecio Neto <helveciofneto@gmail.com>
+# @description: This file calls tasks for the role "linux".
+---
+- name: Get OS Info
+  shell: uname -a && /bin/bash --version
+  changed_when: false
+  register: os_info
+
+- name: Get Memory Usage
+  script: ../scripts/linux/get_memory_pct.sh
+  register: memory_pct
+
+- name: Save Results To Email Body
+  set_fact:
+      email:
+        from: '{{ linux.email.from }}'
+        to: '{{ linux.email.to }}'
+        subject: '{{ linux.email.subject }}'
+        body: |
+          {{ linux.email.subject }}:
+          {{ os_info.stdout }}
+          {{ memory_pct.stdout }}

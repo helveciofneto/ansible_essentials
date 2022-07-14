@@ -1,0 +1,24 @@
+# @author: Helvecio Neto <helveciofneto@gmail.com>
+# @description: This playbook demonstrates how Ansible roles can be used.
+---
+# Play Declaration
+- name: Ansible Roles
+  hosts: '{{ affected_host }}'
+  gather_facts: no
+
+  tasks:
+  - name: Call Linux Role
+    include_role:
+      name: linux
+    when: vars.os == "linux"
+
+  - name: Call Windows Role
+    include_role:
+      name: windows
+    when: vars.os == "windows"
+
+  - name: Send Email using Common Role
+    include_role:
+      name: common
+      defaults_from: send_email.yml
+      tasks_from: send_email.yml

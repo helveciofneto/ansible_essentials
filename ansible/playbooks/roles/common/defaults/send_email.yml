@@ -1,0 +1,11 @@
+# @author: Helvecio Neto <helveciofneto@gmail.com>
+# @description: This file sets default email parameters.
+---
+common:
+  email:
+    host: smtp.gmail.com
+    port: 587
+    username: <your GMail address>
+    password: <a valid GMail App Password>  # For creating App Passwords, refer to https://support.google.com/accounts/answer/185833?hl=en
+    secure: try
+    charset: utf8

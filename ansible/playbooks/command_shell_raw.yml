@@ -1,0 +1,43 @@
+# @author: Helvecio Neto <helveciofneto@gmail.com>
+# @description: This playbook runs and prints the output structure of a module.
+---
+- name: Command, Shell and Raw Modules
+  hosts: '{{ affected_host }}'
+  gather_facts: no
+  ignore_unreachable: yes
+
+  tasks:
+    # Command - Run Simple commands.
+    - name: Run Command Module
+      command: 'uname -a'
+      changed_when: false
+      register: command
+
+    - name: Command Module Output
+      debug:
+        msg: '{{ command }}'
+    # ---------
+    # Shell - Run complex commands with special characters and environment variables.
+    - name: Run Shell Module
+      shell: >
+        set -o pipefail &&
+        echo $USER && echo $HOME && cat /etc/*-release | head -1
+      args:
+        executable: /bin/bash
+      changed_when: false
+      register: shell
+
+    - name: Shell Module Output
+      debug:
+        msg: '{{ shell }}'
+    # ---------
+    # Raw - Run a direct command through SSH without using Python.
+    - name: Run Raw Module
+      raw: 'whoami'
+      changed_when: false
+      register: raw
+
+    - name: Raw Module Output
+      debug:
+        msg: '{{ raw }}'
+    #---------

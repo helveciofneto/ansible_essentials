@@ -1,0 +1,40 @@
+# @author: Helvecio Neto <helveciofneto@gmail.com>
+Vagrant.configure("2") do |config|
+  config.vm.box = "generic/centos7"
+  config.vm.hostname = "controlserver"
+  config.vm.network "private_network", ip: "192.168.56.10"
+  config.vm.provider "virtualbox" do |vb|
+    vb.memory = "256"
+  end
+
+  #Disable default synced folder to avoid rsync errors on Windows hosts.
+  #Ref: https://blog.centos.org/2020/05/updated-centos-vagrant-images-available-v2004-01/
+  config.vm.synced_folder ".", "/vagrant", disabled: true
+
+  #Sync Github folder
+  config.vm.synced_folder "../../ansible", "/home/vagrant/ansible", type: "virtualbox"
+
+  config.vm.provision "shell", inline: <<-SHELL
+    #Install required/useful packages.
+    yum -y install epel-release
+    yum -y install htop
+    yum -y install nano
+    yum -y install python36
+    yum -y install python3-pip
+    yum -y install git
+    yum -y install ShellCheck
+    yum -y install telnet
+    yum -y update
+
+    #Install Ansible and associated modules.
+    su - vagrant -c 'python3 -m pip install --upgrade pip --user'
+    su - vagrant -c 'python3 -m pip install ansible --user'
+    su - vagrant -c 'python3 -m pip install ansible-lint --user'
+    su - vagrant -c 'python3 -m pip install pypsrp==0.4.0 --user'
+
+    #Move SSH keys to .ssh directory and change permissions to 600.
+    su - vagrant -c 'cp "$HOME/ansible/ssh_keys/ansible_ssh_key"* "$HOME/.ssh"'
+    su - vagrant -c 'chmod 600 "$HOME/.ssh/ansible_ssh_key"*'
+
+  SHELL
+end

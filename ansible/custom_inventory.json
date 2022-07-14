@@ -1,0 +1,31 @@
+{
+  "linux": {
+    "hosts": {
+      "linuxserver01": {
+        "ansible_host": "192.168.56.21"
+      },
+      "linuxserver02": {
+        "ansible_host": "192.168.56.22"
+      }
+    },
+    "vars": {
+      "ansible_user": "vagrant",
+      "ansible_ssh_common_args": "-o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -i ~/.ssh/ansible_ssh_key",
+      "os": "linux"
+    }
+  },
+  "windows": {
+    "hosts": {
+      "windowsserver01": {
+        "ansible_host": "192.168.56.31"
+      }
+    },
+    "vars": {
+      "ansible_user": "vagrant",
+      "ansible_password": "vagrant",
+      "ansible_connection": "psrp",
+      "ansible_psrp_cert_validation": "ignore",
+      "os": "windows"
+    }
+  }
+}

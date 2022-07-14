@@ -1,0 +1,33 @@
+# @author: Helvecio Neto <helveciofneto@gmail.com>
+# @description: This playbook demonstrates how to `become` derivative works.
+---
+- name: Become
+  hosts: '{{ affected_host }}'
+  gather_facts: no
+  ignore_unreachable: yes
+
+  tasks:
+    - name: Create File Without Become
+      tempfile:
+        state: file
+        prefix: ansible.
+        suffix: .no_become
+      register: tempfile_no_become
+
+    - name: Print File Info (No Become)
+      debug:
+        msg: '{{ tempfile_no_become }}'
+
+    - name: Create File Using Become
+      tempfile:
+        state: file
+        prefix: ansible.
+        suffix: .using_become
+      register: tempfile_using_become
+      become: yes
+      become_method: sudo
+      become_user: root  # Not really required for root.
+
+    - name: Print File Info (Using Become)
+      debug:
+        msg: '{{ tempfile_using_become }}'

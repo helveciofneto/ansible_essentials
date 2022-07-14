@@ -1,0 +1,32 @@
+# @author: Helvecio Neto <helveciofneto@gmail.com>
+# @description: This playbook runs and prints the output structure of a module.
+---
+- name: Mail Module
+  hosts: '{{ affected_host }}'
+  gather_facts: no
+  ignore_unreachable: yes
+  vars:
+    mail:
+      host: smtp.gmail.com
+      port: 587
+      username: <your GMail address>
+      password: <a valid GMail App Password>  # For creating App Passwords, refer to https://support.google.com/accounts/answer/185833?hl=en
+  tasks:
+    - name: Run Mail Module
+      mail:
+        host: '{{ mail.host }}'
+        port: '{{ mail.port }}'
+        username: '{{ mail.username }}'
+        password: '{{ mail.password }}'
+        secure: '{{ mail.secure }}'
+        charset: '{{ mail.charset }}'
+        from: <your GMail address>
+        to: recipient@domain.com  # Change to a valid email address.
+        subject: 'This is a test email for {{ inventory_hostname }}'
+        body: 'This is a test email body'
+      register: mail
+      delegate_to: 127.0.0.1
+
+    - name: Mail Module Output
+      debug:
+        msg: '{{ mail }}'

@@ -1,0 +1,26 @@
+# @author: Helvecio Neto <helveciofneto@gmail.com>
+# @description: This playbook sends the host's OS info via email.
+---
+# Play Declaration
+- name: Send OS Info Email
+  hosts: 'linuxserver01'
+  gather_facts: no
+
+  tasks:
+    - name: Get OS Info
+      command: 'uname -a'
+      changed_when: false
+      register: os_info
+
+    - name: Send Email
+      mail:
+        host: smtp.gmail.com
+        port: 587
+        username: <your GMail address>
+        password: <a valid GMail App Password>  # For creating App Passwords, refer to https://support.google.com/accounts/answer/185833?hl=en
+        secure: try
+        charset: utf8
+        from: <your GMail address>
+        to: recipient@domain.com  # Change to a valid email address.
+        subject: 'OS Info - {{ inventory_hostname }}'  # inventory_hostname is automatically set from the inventory.
+        body: '{{ os_info }}'
