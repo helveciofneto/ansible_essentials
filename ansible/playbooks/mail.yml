@@ -11,6 +11,8 @@
       port: 587
       username: <your GMail address>
       password: <a valid GMail App Password>  # For creating App Passwords, refer to https://support.google.com/accounts/answer/185833?hl=en
+      secure: try
+      charset: utf8
   tasks:
     - name: Run Mail Module
       mail:

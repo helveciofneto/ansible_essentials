@@ -4,5 +4,5 @@
 linux:
   email:
     from: '<your GMail address>'
-    to: 'recipient@domain.com'  # Change to your email address
+    to: recipient@domain.com  # Change to a valid email address.
     subject: 'Linux Results - {{ inventory_hostname }}'

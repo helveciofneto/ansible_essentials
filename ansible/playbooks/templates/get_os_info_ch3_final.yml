@@ -59,7 +59,7 @@
             secure: try
             charset: utf8
             from: <your GMail address>
-            to: '{{ email_to | default("recipient@domain.com") }}'  # Change to your email address
+            to: '{{ email_to | default("recipient@domain.com") }}'  # Change to a valid email address.
             subject: 'OS Info {{ email_tag }} - {{ inventory_hostname }}'
             body: '{{ email_body }}'
           delegate_to: 127.0.0.1
