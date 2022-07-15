@@ -6,8 +6,8 @@ Vagrant.configure("2") do |config|
   config.vm.provider "virtualbox" do |vb|
     vb.memory = "256"
   end
-  #Copy SSH key and inventory files to VM.
-  #Ref https://www.vagrantup.com/docs/provisioning/file.html
+  # Copy SSH key and inventory files to VM.
+  # Ref https://www.vagrantup.com/docs/provisioning/file.html
   config.vm.provision "file", source: "../../ansible/ssh_keys/ansible_ssh_key.pub", destination: "$HOME/.ssh/ansible_ssh_key.pub"
 
   config.vm.provision "shell", inline: <<-SHELL
